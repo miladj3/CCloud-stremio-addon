@@ -44,6 +44,12 @@ async function metaHandler({ type, id }) {
             cast: stremioMeta.cast
         }
 
+        // Add country at the end of description
+        if (cachedItem.country && cachedItem.country.length > 0) {
+            const countryNames = cachedItem.country.map(c => c.title).join(', ')
+            meta.description = (meta.description || '') + `\n\n\n\nمحصول کشور ${countryNames}\n\n`
+        }
+
         // For series, fetch seasons and episodes
         if (type === 'series') {
             try {
