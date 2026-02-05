@@ -2,6 +2,15 @@ const { fetchMovies, fetchSeries, search, getGenreId, toStremioMeta } = require(
 const { itemCache, movieSourcesCache } = require('../lib/cache')
 
 /**
+ * Check if string contains Farsi/Persian characters
+ */
+function hasFarsiTitle(title) {
+    if (!title) return false
+    // Persian/Arabic Unicode range
+    return /[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(title)
+}
+
+/**
  * Catalog Handler
  * Returns list of items shown on the main screen
  */
@@ -38,6 +47,9 @@ async function catalogHandler({ type, id, extra }) {
         } else if (type === 'series' && id === 'ccloud-series') {
             items = await fetchSeries(page, genreId)
         }
+
+        // Filter out items with Farsi titles
+        items = items.filter(item => !hasFarsiTitle(item.title))
 
         // Transform to Stremio format and cache data
         const metas = items.map(item => {
