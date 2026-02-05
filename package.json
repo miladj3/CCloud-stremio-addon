@@ -1,0 +1,13 @@
+{
+  "name": "ccloud-stremio-addon",
+  "version": "1.0.0",
+  "description": "CCloud Stremio Addon",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js --launch"
+  },
+  "dependencies": {
+    "stremio-addon-sdk": "^1.6.10"
+  }
+}
