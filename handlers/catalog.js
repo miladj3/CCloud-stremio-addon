@@ -53,7 +53,6 @@ async function catalogHandler({ type, id, extra }) {
                 name: meta.name,
                 poster: meta.poster,
                 year: meta.year,
-                imdbRating: meta.imdbRating,
                 description: meta.description
             }
         })

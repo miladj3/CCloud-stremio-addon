@@ -40,7 +40,8 @@ async function metaHandler({ type, id }) {
             year: stremioMeta.year,
             genres: stremioMeta.genres,
             runtime: stremioMeta.runtime,
-            imdbRating: stremioMeta.imdbRating
+            director: stremioMeta.director,
+            cast: stremioMeta.cast
         }
 
         // For series, fetch seasons and episodes
