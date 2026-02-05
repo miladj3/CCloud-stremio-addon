@@ -1,4 +1,4 @@
-const { fetchMovies, fetchSeries, search, toStremioMeta } = require('../lib/api')
+const { fetchMovies, fetchSeries, search, getGenreId, toStremioMeta } = require('../lib/api')
 const { itemCache, movieSourcesCache } = require('../lib/cache')
 
 /**
@@ -8,9 +8,16 @@ const { itemCache, movieSourcesCache } = require('../lib/cache')
 async function catalogHandler({ type, id, extra }) {
     const skip = extra?.skip ? parseInt(extra.skip) : 0
     const searchQuery = extra?.search || null
+    const genreName = extra?.genre || null
 
     // Calculate page from skip (assuming ~20 items per page)
     const page = Math.floor(skip / 20)
+
+    // Get genre ID if genre filter is specified
+    let genreId = 0
+    if (genreName) {
+        genreId = await getGenreId(genreName) || 0
+    }
 
     let items = []
 
@@ -27,9 +34,9 @@ async function catalogHandler({ type, id, extra }) {
         }
         // Handle catalog browsing
         else if (type === 'movie' && id === 'ccloud-movies') {
-            items = await fetchMovies(page)
+            items = await fetchMovies(page, genreId)
         } else if (type === 'series' && id === 'ccloud-series') {
-            items = await fetchSeries(page)
+            items = await fetchSeries(page, genreId)
         }
 
         // Transform to Stremio format and cache data

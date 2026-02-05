@@ -23,8 +23,16 @@ module.exports = {
             type: 'movie',
             id: 'ccloud-movies',
             name: 'CCloud Movies',
-            // Optional: add search support
             extra: [
+                {
+                    name: 'genre',
+                    isRequired: false,
+                    options: [
+                        'Action', 'Adventure', 'Animation & Anime', 'Biography', 'Comedy', 'Crime',
+                        'Documentary', 'Drama', 'Family', 'Fantasy', 'Historical', 'Horror',
+                        'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Thriller', 'War', 'Western'
+                    ]
+                },
                 { name: 'search', isRequired: false },
                 { name: 'skip', isRequired: false }
             ]
@@ -34,6 +42,15 @@ module.exports = {
             id: 'ccloud-series',
             name: 'CCloud Series',
             extra: [
+                {
+                    name: 'genre',
+                    isRequired: false,
+                    options: [
+                        'Action', 'Adventure', 'Animation & Anime', 'Biography', 'Comedy', 'Crime',
+                        'Documentary', 'Drama', 'Family', 'Fantasy', 'Historical', 'Horror',
+                        'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Thriller', 'War', 'Western'
+                    ]
+                },
                 { name: 'search', isRequired: false },
                 { name: 'skip', isRequired: false }
             ]
