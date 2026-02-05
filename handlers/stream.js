@@ -1,4 +1,5 @@
-const { fetchStream } = require('../lib/api')
+const { toStremioStreams } = require('../lib/api')
+const { movieSourcesCache, episodeSourcesCache } = require('../lib/cache')
 
 /**
  * Stream Handler
@@ -8,50 +9,38 @@ async function streamHandler({ type, id }) {
     // Remove the 'ccloud:' prefix
     const actualId = id.replace('ccloud:', '')
 
-    // For series, the id might be like "series-1:1:1" (seriesId:season:episode)
-    const streamData = await fetchStream(type, actualId)
+    try {
+        let sources = []
 
-    // Return array of streams (can have multiple sources)
-    const streams = [
-        {
-            name: 'CCloud',
-            title: streamData.title || 'Play',
-            url: streamData.url,
-
-            // Optional: Add more info
-            // description: 'HD Quality',
-
-            // For different stream types:
-            // Direct URL:
-            // url: 'https://example.com/video.mp4'
-
-            // YouTube:
-            // ytId: 'VIDEO_ID'
-
-            // External player (opens in browser):
-            // externalUrl: 'https://example.com/player'
-
-            // Torrent:
-            // infoHash: 'TORRENT_HASH'
-            // fileIdx: 0  // File index in torrent
+        if (type === 'movie') {
+            // Get movie sources from cache
+            sources = movieSourcesCache.get(actualId) || []
+        } else if (type === 'series') {
+            // For series, actualId is "seriesId:season:episode"
+            sources = episodeSourcesCache.get(actualId) || []
         }
-    ]
 
-    // You can return multiple streams for different qualities/sources
-    // Example with multiple qualities:
-    /*
-    if (streamData.qualities) {
-        return {
-            streams: streamData.qualities.map(q => ({
-                name: 'CCloud',
-                title: q.label,  // e.g., '720p', '1080p'
-                url: q.url
-            }))
+        if (sources.length === 0) {
+            console.warn(`No sources found for ${type} ${actualId}`)
+            return { streams: [] }
         }
+
+        // Convert to Stremio stream format
+        const streams = toStremioStreams(sources)
+
+        // Sort by quality (highest first)
+        streams.sort((a, b) => {
+            const qualityOrder = { '4K': 4, '2160p': 4, '1080p': 3, '720p': 2, '480p': 1, '360p': 0 }
+            const aOrder = qualityOrder[a.quality] ?? -1
+            const bOrder = qualityOrder[b.quality] ?? -1
+            return bOrder - aOrder
+        })
+
+        return { streams }
+    } catch (error) {
+        console.error('Stream error:', error.message)
+        return { streams: [] }
     }
-    */
-
-    return { streams }
 }
 
 module.exports = streamHandler

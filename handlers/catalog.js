@@ -1,4 +1,5 @@
-const { fetchMovies, fetchSeries } = require('../lib/api')
+const { fetchMovies, fetchSeries, search, toStremioMeta } = require('../lib/api')
+const { itemCache, movieSourcesCache } = require('../lib/cache')
 
 /**
  * Catalog Handler
@@ -6,30 +7,62 @@ const { fetchMovies, fetchSeries } = require('../lib/api')
  */
 async function catalogHandler({ type, id, extra }) {
     const skip = extra?.skip ? parseInt(extra.skip) : 0
-    const search = extra?.search || null
+    const searchQuery = extra?.search || null
+
+    // Calculate page from skip (assuming ~20 items per page)
+    const page = Math.floor(skip / 20)
 
     let items = []
 
-    if (type === 'movie' && id === 'ccloud-movies') {
-        items = await fetchMovies(skip, search)
-    } else if (type === 'series' && id === 'ccloud-series') {
-        items = await fetchSeries(skip, search)
+    try {
+        // Handle search
+        if (searchQuery) {
+            const results = await search(searchQuery)
+            // Filter by type
+            items = results.filter(item => {
+                if (type === 'movie') return item.type === 'movie'
+                if (type === 'series') return item.type === 'serie'
+                return true
+            })
+        }
+        // Handle catalog browsing
+        else if (type === 'movie' && id === 'ccloud-movies') {
+            items = await fetchMovies(page)
+        } else if (type === 'series' && id === 'ccloud-series') {
+            items = await fetchSeries(page)
+        }
+
+        // Transform to Stremio format and cache data
+        const metas = items.map(item => {
+            const itemId = item.id.toString()
+
+            // Cache full item data for meta handler
+            itemCache.set(itemId, item)
+
+            // Cache movie sources for stream handler
+            if (item.sources && item.sources.length > 0) {
+                movieSourcesCache.set(itemId, item.sources)
+            }
+
+            const stremioType = item.type === 'serie' ? 'series' : type
+            const meta = toStremioMeta(item, stremioType)
+
+            return {
+                id: `ccloud:${meta.id}`,
+                type: stremioType,
+                name: meta.name,
+                poster: meta.poster,
+                year: meta.year,
+                imdbRating: meta.imdbRating,
+                description: meta.description
+            }
+        })
+
+        return { metas }
+    } catch (error) {
+        console.error('Catalog error:', error.message)
+        return { metas: [] }
     }
-
-    // Transform your API data to Stremio format
-    const metas = items.map(item => ({
-        id: `ccloud:${item.id}`,  // Prefix with ccloud:
-        type: type,
-        name: item.title,
-        poster: item.poster,
-        // Optional fields:
-        year: item.year,
-        // posterShape: 'regular',  // 'regular', 'landscape', or 'square'
-        // description: item.description,
-        // genres: item.genres,
-    }))
-
-    return { metas }
 }
 
 module.exports = catalogHandler
