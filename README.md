@@ -1,6 +1,12 @@
+<img src="assets/banner.png" alt="CCloud Banner" width="300">
+
 # CCloud Addon برای Stremio
 
 [English](README.en.md)
+
+<p align="center">
+  <img src="assets/logo.png" alt="CCloud Logo" width="200">
+</p>
 
 افزونه CCloud برای اپلیکیشن Stremio که امکان تماشای فیلم و سریال را فراهم می‌کند.
 
@@ -52,3 +58,11 @@
 ## توسعه‌دهنده
 
 ساخته شده با Node.js و [Stremio Addon SDK](https://github.com/Stremio/stremio-addon-sdk)
+
+---
+
+![Views](https://komarev.com/ghpvc/?username=masooddalman&repo=CCloud-stremio-addon&label=Views&color=blue&style=flat)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=masooddalman/CCloud-stremio-addon&type=date&legend=bottom-right)](https://www.star-history.com/#masooddalman/CCloud-stremio-addon&type=date&legend=bottom-right)
