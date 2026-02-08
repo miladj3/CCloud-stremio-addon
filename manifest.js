@@ -65,7 +65,7 @@ module.exports = {
     ],
 
     // Optional: addon logo
-    logo: 'https://github.com/masooddalman/CCloud-stremio-addon/blob/main/assets/logo.png',
+    logo: 'https://github.com/masooddalman/CCloud-stremio-addon/blob/main/assets/logo.png?raw=true',
 
     // Optional: background image
     // background: 'https://your-domain.com/background.jpg'
