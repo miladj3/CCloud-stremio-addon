@@ -54,20 +54,27 @@ async function metaHandler({ type, id }) {
         if (type === 'series') {
             try {
                 const seasons = await fetchSeasons(parseInt(actualId))
+                console.log(`[Meta] Series ${actualId}: fetched ${seasons.length} seasons`)
+
                 const videos = toStremioVideos(seasons, actualId)
+                console.log(`[Meta] Total videos: ${videos.length}`)
 
                 // Cache episodes with their sources for stream handler
                 videos.forEach(video => {
                     if (video._sources && video._sources.length > 0) {
-                        episodeSourcesCache.set(`${actualId}:${video.season}:${video.episode}`, video._sources)
+                        const cacheKey = `${actualId}:${video.season}:${video.episode}`
+                        console.log(`[Meta] Caching ${cacheKey} with ${video._sources.length} sources`)
+                        episodeSourcesCache.set(cacheKey, video._sources)
                     }
                 })
 
                 // Remove internal _sources before returning
-                meta.videos = videos.map(({ _sources, ...video }) => ({
+                const finalVideos = videos.map(({ _sources, ...video }) => ({
                     ...video,
                     id: `ccloud:${video.id}`
                 }))
+                console.log(`[Meta] First 3 video IDs:`, finalVideos.slice(0, 3).map(v => v.id))
+                meta.videos = finalVideos
             } catch (error) {
                 console.error('Error fetching seasons:', error.message)
                 meta.videos = []

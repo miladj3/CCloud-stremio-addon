@@ -1,4 +1,4 @@
-const { toStremioStreams, search, fetchSeasons } = require('../lib/api')
+const { toStremioStreams, search, fetchSeasons, groupSeasonsByNumber } = require('../lib/api')
 const { movieSourcesCache, episodeSourcesCache, itemCache } = require('../lib/cache')
 
 /**
@@ -40,6 +40,7 @@ async function findMovieSourcesByTitle(title) {
 
 /**
  * Search CCloud for a series title and return episode sources
+ * Groups API seasons by actual season number to merge different versions
  */
 async function findEpisodeSourcesByTitle(title, season, episode) {
     const results = await search(title)
@@ -61,40 +62,37 @@ async function findEpisodeSourcesByTitle(title, season, episode) {
         return []
     }
 
-    console.log(`Seasons count: ${seasons.length}`)
+    // Group seasons by actual season number
+    const groups = groupSeasonsByNumber(seasons)
+    console.log(`Grouped ${seasons.length} API seasons into ${Object.keys(groups).length} actual seasons`)
 
-    // Find the matching season (season index is 0-based in API)
-    const seasonData = seasons[season - 1]
-    if (!seasonData || !seasonData.episodes) {
-        console.log(`Season ${season} not found (available: ${seasons.length} seasons)`)
+    const versions = groups[season]
+    if (!versions || versions.length === 0) {
+        console.log(`Season ${season} not found (available: ${Object.keys(groups).join(', ')})`)
         return []
     }
 
-    // Filter out trailers (تیزر) - they are not actual episodes
-    const actualEpisodes = seasonData.episodes.filter(ep => ep.title !== 'تیزر')
-    console.log(`Season ${season} has ${actualEpisodes.length} episodes (${seasonData.episodes.length - actualEpisodes.length} trailers filtered)`)
+    // Collect sources from all versions for this episode
+    let allSources = []
+    versions.forEach(version => {
+        const actualEpisodes = (version.episodes || []).filter(ep => ep.title !== 'تیزر')
+        if (actualEpisodes[episode - 1]) {
+            const ep = actualEpisodes[episode - 1]
+            if (ep.sources) {
+                ep.sources.forEach(source => {
+                    allSources.push({ ...source, _versionInfo: version._versionInfo })
+                })
+            }
+        }
+    })
 
-    // Find the matching episode (episode index is 0-based)
-    const episodeData = actualEpisodes[episode - 1]
-    if (!episodeData) {
-        console.log(`Episode ${episode} not found in season ${season}`)
-        return []
-    }
-
-    console.log(`Episode data:`, JSON.stringify(episodeData).substring(0, 500))
-
-    if (!episodeData.sources || episodeData.sources.length === 0) {
-        console.log(`No sources found for S${season}E${episode}`)
-        return []
-    }
-
-    console.log(`Found ${episodeData.sources.length} sources, first source:`, JSON.stringify(episodeData.sources[0]))
+    console.log(`Found ${allSources.length} total sources from ${versions.length} version(s) for S${season}E${episode}`)
 
     // Cache for future use
     const cacheKey = `${seriesId}:${season}:${episode}`
-    episodeSourcesCache.set(cacheKey, episodeData.sources)
+    episodeSourcesCache.set(cacheKey, allSources)
 
-    return episodeData.sources
+    return allSources
 }
 
 /**
