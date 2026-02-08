@@ -55,6 +55,10 @@
 
 می‌توانید از فیلتر ژانر برای پیدا کردن فیلم یا سریال مورد نظر استفاده کنید.
 
+## منبع
+
+بر اساس پروژه [CCloud](https://github.com/code3-dev/CCloud)
+
 ## توسعه‌دهنده
 
 ساخته شده با Node.js و [Stremio Addon SDK](https://github.com/Stremio/stremio-addon-sdk)
@@ -63,6 +67,5 @@
 
 ![Views](https://komarev.com/ghpvc/?username=masooddalman&repo=CCloud-stremio-addon&label=Views&color=blue&style=flat)
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=masooddalman/CCloud-stremio-addon&type=date&legend=bottom-right)](https://www.star-history.com/#masooddalman/CCloud-stremio-addon&type=date&legend=bottom-right)
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/masooddalman/CCloud-stremio-addon.svg?variant=adaptive)](https://starchart.cc/masooddalman/CCloud-stremio-addon)

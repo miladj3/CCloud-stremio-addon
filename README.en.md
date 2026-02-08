@@ -55,6 +55,10 @@ After installation, two new sections will appear on Stremio's main screen:
 
 You can use the genre filter to find specific movies or series.
 
+## Credits
+
+Based on the [CCloud](https://github.com/code3-dev/CCloud) project.
+
 ## Development
 
 Built with Node.js and [Stremio Addon SDK](https://github.com/Stremio/stremio-addon-sdk)
@@ -63,6 +67,5 @@ Built with Node.js and [Stremio Addon SDK](https://github.com/Stremio/stremio-ad
 
 ![Views](https://komarev.com/ghpvc/?username=masooddalman&repo=CCloud-stremio-addon&label=Views&color=blue&style=flat)
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=masooddalman/CCloud-stremio-addon&type=date&legend=bottom-right)](https://www.star-history.com/#masooddalman/CCloud-stremio-addon&type=date&legend=bottom-right)
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/masooddalman/CCloud-stremio-addon.svg?variant=adaptive)](https://starchart.cc/masooddalman/CCloud-stremio-addon)
