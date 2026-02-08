@@ -1,6 +1,6 @@
 module.exports = {
     id: 'community.ccloud',
-    version: '1.0.0',
+    version: '1.0.1',
     name: 'CCloud',
     description: 'CCloud Addon for Stremio',
 
@@ -10,12 +10,19 @@ module.exports = {
     // Resources/handlers this addon implements
     resources: [
         'catalog',
-        'meta',
-        'stream'
+        {
+            name: 'meta',
+            types: ['movie', 'series'],
+            idPrefixes: ['ccloud:']
+        },
+        {
+            name: 'stream',
+            types: ['movie', 'series'],
+            idPrefixes: ['ccloud:', 'tt']
+        }
     ],
 
-    // Custom ID prefix - all your content IDs will be prefixed with this
-    idPrefixes: ['ccloud:'],
+    idPrefixes: ['ccloud:', 'tt'],
 
     // Catalogs shown on the main screen
     catalogs: [
