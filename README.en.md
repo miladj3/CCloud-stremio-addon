@@ -24,7 +24,7 @@ CCloud addon for Stremio app that allows you to watch movies and TV series.
 
 1. Open this link in your browser:
    ```
-   https://ccloud-addon.onrender.com/
+   https://c-cloud-stremio-addon.vercel.app/
    ```
 2. Click the **Install** button
 3. Stremio will open and the addon will be installed
@@ -35,7 +35,7 @@ If automatic installation doesn't work:
 
 1. Copy this link:
    ```
-   stremio://ccloud-addon.onrender.com/manifest.json
+   stremio://c-cloud-stremio-addon.vercel.app/manifest.json
    ```
 
 2. Open the Stremio app

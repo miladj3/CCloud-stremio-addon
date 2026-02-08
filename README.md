@@ -24,7 +24,7 @@
 
 1. لینک زیر را در مرورگر باز کنید:
    ```
-   https://ccloud-addon.onrender.com/
+   https://c-cloud-stremio-addon.vercel.app/
    ```
 2. روی دکمه **Install** کلیک کنید
 3. اپلیکیشن Stremio باز می‌شود و افزونه نصب می‌شود
@@ -35,7 +35,7 @@
 
 1. لینک زیر را کپی کنید:
    ```
-   stremio://ccloud-addon.onrender.com/manifest.json
+   stremio://c-cloud-stremio-addon.vercel.app/manifest.json
    ```
 
 2. اپلیکیشن Stremio را باز کنید
